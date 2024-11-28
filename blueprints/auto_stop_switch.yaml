@@ -1,0 +1,33 @@
+blueprint:
+  name: Auto Stop Switch
+  description: Turn off a switch after a delay
+  domain: automation
+
+  input:
+    switch_entity:
+      name: Switch to activate
+      selector:
+        entity:
+          domain: switch
+    wait_time:
+      name: Wait time
+      description: Time to leave the switch on after activation
+      default: 240
+      selector:
+        number:
+          min: 0
+          max: 3600
+          unit_of_measurement: seconds
+
+trigger:
+  - platform: state
+    entity_id: !input switch_entity
+    from: "off"
+    to: "on"
+
+action:
+  - delay:
+      seconds: !input wait_time
+  - service: switch.turn_off
+    target:
+      entity_id: !input switch_entity
